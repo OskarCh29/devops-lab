@@ -2,9 +2,7 @@ package pl.devlab.profile;
 
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import pl.devlab.config.ResponseDistributionConfiguration;
 import reactor.core.publisher.Mono;
 
@@ -24,15 +22,11 @@ public class ResponseDistributionProfileService {
 
     public Mono<ResponseDistributionResponse> getDistributionDetails(String profileName) {
         return Mono.fromCallable(() -> {
-                    Map<Integer, Integer> distribution = getResponseDistributionByProfile(profileName);
+            Map<Integer, Integer> distribution = getResponseDistributionByProfile(profileName);
 
-                    return new ResponseDistributionResponse(
-                            profileName, profileName.equals(config.activeProfile()), distribution);
-                })
-                .onErrorMap(
-                        IllegalArgumentException.class,
-                        error -> new ResponseStatusException(
-                                HttpStatus.BAD_REQUEST, "Unknown profile: " + profileName, error));
+            return new ResponseDistributionResponse(
+                    profileName, profileName.equals(config.activeProfile()), distribution);
+        });
     }
 
     public Map<Integer, Integer> getResponseDistributionByProfile(String profileName) {

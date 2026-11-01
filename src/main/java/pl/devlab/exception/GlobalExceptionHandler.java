@@ -1,0 +1,31 @@
+package pl.devlab.exception;
+
+import java.time.Instant;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ServerWebExchange;
+import pl.devlab.common.ErrorResponse;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
+            IllegalArgumentException exception, ServerWebExchange exchange) {
+        return createResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exchange);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception e, ServerWebExchange exchange) {
+        return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), exchange);
+    }
+
+    private ResponseEntity<ErrorResponse> createResponse(
+            HttpStatus httpStatus, String message, ServerWebExchange exchange) {
+        ErrorResponse errorResponse = ErrorResponse.of(httpStatus, message, exchange, Instant.now());
+
+        return ResponseEntity.status(httpStatus).body(errorResponse);
+    }
+}
