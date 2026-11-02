@@ -14,27 +14,37 @@ public class ResponseDistributionProfileService {
 
     public Mono<ResponseDistributionResponse> getActiveDistribution() {
         return Mono.fromCallable(() -> {
-            String activeProfile = config.activeProfile();
-            Map<Integer, Integer> distribution = getResponseDistributionByProfile(activeProfile);
-            return new ResponseDistributionResponse(activeProfile, true, distribution);
+            final String activeProfile = config.activeProfile();
+
+            return createResponse(activeProfile, true);
         });
     }
 
     public Mono<ResponseDistributionResponse> getDistributionDetails(String profileName) {
         return Mono.fromCallable(() -> {
-            Map<Integer, Integer> distribution = getResponseDistributionByProfile(profileName);
+            final boolean active = profileName.equals(config.activeProfile());
 
-            return new ResponseDistributionResponse(
-                    profileName, profileName.equals(config.activeProfile()), distribution);
+            return createResponse(profileName, active);
         });
     }
 
-    public Map<Integer, Integer> getResponseDistributionByProfile(String profileName) {
-        var profileConfiguration = config.profiles().get(profileName);
+    private ResponseDistributionResponse createResponse(String profileName, boolean active) {
+        final Map<Integer, Integer> distribution = getResponseDistributionByProfile(profileName);
+
+        return new ResponseDistributionResponse(profileName, active, distribution);
+    }
+
+    private Map<Integer, Integer> getResponseDistributionByProfile(String profileName) {
+        if (profileName == null || profileName.isBlank()) {
+            throw new InvalidProfileException("Profile name must not be blank");
+        }
+
+        final var profileConfiguration = config.profiles().get(profileName);
 
         if (profileConfiguration == null) {
-            throw new IllegalArgumentException("Profile is not configured: " + profileName);
+            throw new InvalidProfileException("Profile is not configured: " + profileName);
         }
+
         return profileConfiguration.distribution();
     }
 }

@@ -1,6 +1,7 @@
 package pl.devlab.config;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "dev.responses")
@@ -27,6 +28,10 @@ public record ResponseDistributionConfiguration(String activeProfile, Map<String
             }
             validateDistribution(name, profile.distribution);
         });
+        profiles = profiles.entrySet().stream()
+                .collect(Collectors.toUnmodifiableMap(
+                        Map.Entry::getKey,
+                        entry -> new Profile(Map.copyOf(entry.getValue().distribution()))));
     }
 
     private static void validateDistribution(String profileName, Map<Integer, Integer> distribution) {
@@ -54,7 +59,7 @@ public record ResponseDistributionConfiguration(String activeProfile, Map<String
 
         if (total != ONE_HUNDRED) {
             throw new IllegalArgumentException(
-                    "Profile %s must sum 100%% , but was %d%%".formatted(profileName, total));
+                    "Profile %s must sum to 100%% , but was %d%%".formatted(profileName, total));
         }
     }
 }

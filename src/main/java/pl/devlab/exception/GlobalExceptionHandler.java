@@ -7,20 +7,27 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ServerWebExchange;
 import pl.devlab.common.ErrorResponse;
+import pl.devlab.profile.InvalidProfileException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(InvalidProfileException.class)
+    public ResponseEntity<ErrorResponse> handleProfileNotFoundException(
+            InvalidProfileException exception, ServerWebExchange exchange) {
+        return createResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exchange);
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
             IllegalArgumentException exception, ServerWebExchange exchange) {
         return createResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exchange);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralException(Exception e, ServerWebExchange exchange) {
-        return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), exchange);
-    }
+    //
+    //    @ExceptionHandler(Exception.class)
+    //    public ResponseEntity<ErrorResponse> handleGeneralException(Exception e, ServerWebExchange exchange) {
+    //        return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), exchange);
+    //    }
 
     private ResponseEntity<ErrorResponse> createResponse(
             HttpStatus httpStatus, String message, ServerWebExchange exchange) {
