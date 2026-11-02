@@ -22,7 +22,7 @@ public class ResponseDistributionProfileService {
 
     public Mono<ResponseDistributionResponse> getDistributionDetails(String profileName) {
         return Mono.fromCallable(() -> {
-            final boolean active = profileName.equals(config.activeProfile());
+            final boolean active = config.activeProfile().equals(profileName);
 
             return createResponse(profileName, active);
         });

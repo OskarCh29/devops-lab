@@ -1,0 +1,6 @@
+{
+  "status": 400,
+  "code": "BAD_REQUEST",
+  "message": "Profile is not configured: test",
+  "path": "/profiles/test/distribution"
+}

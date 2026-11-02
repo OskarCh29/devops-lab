@@ -1,0 +1,9 @@
+{
+  "profile": "normal",
+  "active": true,
+  "distribution": {
+    "500": 10,
+    "200": 70,
+    "400": 20
+  }
+}

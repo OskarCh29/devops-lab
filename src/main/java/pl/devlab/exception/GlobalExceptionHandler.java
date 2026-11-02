@@ -23,11 +23,11 @@ public class GlobalExceptionHandler {
             IllegalArgumentException exception, ServerWebExchange exchange) {
         return createResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), exchange);
     }
-    //
-    //    @ExceptionHandler(Exception.class)
-    //    public ResponseEntity<ErrorResponse> handleGeneralException(Exception e, ServerWebExchange exchange) {
-    //        return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), exchange);
-    //    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception e, ServerWebExchange exchange) {
+        return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), exchange);
+    }
 
     private ResponseEntity<ErrorResponse> createResponse(
             HttpStatus httpStatus, String message, ServerWebExchange exchange) {

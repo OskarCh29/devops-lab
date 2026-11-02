@@ -1,0 +1,6 @@
+{
+  "status": 400,
+  "code": "BAD_REQUEST",
+  "message": "Profile name must not be blank",
+  "path": "/profiles/%20%20%20/distribution"
+}
