@@ -1,8 +1,8 @@
 package pl.devlab.profile;
 
-import static pl.devlab.helper.TestUtil.ACTIVE_PROFILE_RESPONSE;
-import static pl.devlab.helper.TestUtil.OVERLOADED_PROFILE_RESPONSE;
-import static pl.devlab.helper.TestUtil.RESPONSE_DISTRIBUTION_CONFIGURATION;
+import static pl.devlab.util.TestUtil.ACTIVE_PROFILE_RESPONSE;
+import static pl.devlab.util.TestUtil.OVERLOADED_PROFILE_RESPONSE;
+import static pl.devlab.util.TestUtil.RESPONSE_DISTRIBUTION_CONFIGURATION;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

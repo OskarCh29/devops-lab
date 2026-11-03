@@ -1,4 +1,4 @@
-package pl.devlab.helper;
+package pl.devlab.util;
 
 import java.util.Map;
 import pl.devlab.config.ResponseDistributionConfiguration;

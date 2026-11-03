@@ -1,8 +1,8 @@
 package pl.devlab.profile;
 
 import static org.mockito.BDDMockito.given;
-import static pl.devlab.helper.TestUtil.ACTIVE_PROFILE_RESPONSE;
-import static pl.devlab.helper.TestUtil.OVERLOADED_PROFILE_RESPONSE;
+import static pl.devlab.util.TestUtil.ACTIVE_PROFILE_RESPONSE;
+import static pl.devlab.util.TestUtil.OVERLOADED_PROFILE_RESPONSE;
 
 import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
@@ -25,8 +25,8 @@ class ResponseDistributionProfileControllerTest {
     private ResponseDistributionProfileService profileService;
 
     @Test
-    @DisplayName("GET distribution - Should return 200 with proper response")
-    void getDistribution_shouldReturn200_whenProfileExists() throws IOException {
+    @DisplayName("Returns configured inactive profile")
+    void getDistributionDetailsReturnsInactiveProfile() throws IOException {
         given(profileService.getDistributionDetails("overloaded")).willReturn(Mono.just(OVERLOADED_PROFILE_RESPONSE));
 
         String expectedResponse = JsonUtil.getJsonFromFile("response/profile_distribution_200_response.json");
@@ -42,8 +42,8 @@ class ResponseDistributionProfileControllerTest {
     }
 
     @Test
-    @DisplayName("GET distribution - Should return 400 when profile name is blank")
-    void getDistribution_shouldReturn400_whenProfileNameBlank() throws IOException {
+    @DisplayName("Rejects blank profile name")
+    void getDistributionDetailsRejectsBlankName() throws IOException {
         String mockResponse = JsonUtil.getJsonFromFile("response/profile_distribution_400_blank_profile_response.json");
         given(profileService.getDistributionDetails("   "))
                 .willReturn(Mono.error(new InvalidProfileException("Profile name must not be blank")));
@@ -59,8 +59,8 @@ class ResponseDistributionProfileControllerTest {
     }
 
     @Test
-    @DisplayName("GET distribution - Should return 400 when profile not exists")
-    void getDistribution_shouldReturn400_whenProfileNotExists() throws IOException {
+    @DisplayName("Rejects unknown profile")
+    void getDistributionDetailsRejectsUnknownProfile() throws IOException {
         given(profileService.getDistributionDetails("test"))
                 .willReturn(Mono.error(new InvalidProfileException("Profile is not configured: test")));
 
@@ -77,8 +77,8 @@ class ResponseDistributionProfileControllerTest {
     }
 
     @Test
-    @DisplayName("GET active distribution - Should return 200 with proper response")
-    void getActiveDistribution_shouldReturn200() throws IOException {
+    @DisplayName("Returns active profile")
+    void getActiveDistributionReturnsActiveProfile() throws IOException {
         given(profileService.getActiveDistribution()).willReturn(Mono.just(ACTIVE_PROFILE_RESPONSE));
 
         String expectedResponse = JsonUtil.getJsonFromFile("response/profile_distribution_active_200_response.json");
