@@ -1,0 +1,8 @@
+services:
+  redis:
+    image: redis:8.8.4
+    container_name: DevopsLab-redis
+    ports:
+      - "6379:6379"
+    cpus: 0.25
+    mem_limit: 256m
