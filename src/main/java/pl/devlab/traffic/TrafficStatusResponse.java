@@ -1,3 +1,8 @@
 package pl.devlab.traffic;
 
-public record TrafficStatusResponse(TrafficStatus status, TrafficState state, int requestsPerSecond) {}
+public record TrafficStatusResponse(TrafficState state, int requestsPerSecond) {
+
+    public TrafficStatusResponse(TrafficState state) {
+        this(state, state.requestsPerSecond());
+    }
+}

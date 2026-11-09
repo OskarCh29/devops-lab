@@ -16,14 +16,19 @@ public class TrafficController {
 
     private final TrafficService trafficService;
 
-    @GetMapping
-    public Mono<TrafficStatusResponse> getRandomResponse() {
+    @GetMapping("/distributed")
+    public Mono<?> getResponseBasedOnDistribution() {
         return Mono.empty();
+    }
+
+    @GetMapping("/random")
+    public Mono<Void> getRandomResponse() {
+        return trafficService.getRandomResponse();
     }
 
     @GetMapping("/state")
     public Mono<TrafficStatusResponse> getTrafficStatus() {
-        return Mono.empty();
+        return trafficService.getTrafficStatus();
     }
 
     @PutMapping("/state")
@@ -32,7 +37,7 @@ public class TrafficController {
     }
 
     @PostMapping("/stop")
-    public Mono<TrafficStatusResponse> stopTraffic() {
+    public Mono<?> stopTraffic() {
         return Mono.empty();
     }
 }

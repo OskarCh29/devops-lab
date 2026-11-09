@@ -5,12 +5,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import pl.devlab.common.ErrorResponse;
 import pl.devlab.profile.InvalidProfileException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorResponse> handleResponseStatusException(
+            ResponseStatusException e, ServerWebExchange exchange) {
+        HttpStatus status = HttpStatus.valueOf(e.getStatusCode().value());
+        return createResponse(status, status.getReasonPhrase(), exchange);
+    }
 
     @ExceptionHandler(InvalidProfileException.class)
     public ResponseEntity<ErrorResponse> handleProfileNotFoundException(

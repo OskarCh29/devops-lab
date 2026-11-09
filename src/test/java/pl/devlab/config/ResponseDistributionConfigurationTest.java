@@ -1,14 +1,12 @@
 package pl.devlab.config;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class ResponseDistributionConfigurationTest {
 
@@ -18,8 +16,7 @@ class ResponseDistributionConfigurationTest {
         var distribution = Map.of(100, 0, 599, 100);
         var configuration = new ResponseDistributionConfiguration("normal", profiles(distribution));
 
-        assertEquals(
-                distribution, configuration.profiles().get("normal").distribution());
+        assertEquals(distribution, configuration.profiles().get("normal").distribution());
         assertThrows(
                 UnsupportedOperationException.class,
                 () -> configuration.profiles().clear());
@@ -47,12 +44,8 @@ class ResponseDistributionConfigurationTest {
     @Test
     @DisplayName("Rejects missing or empty distributions")
     void rejectsMissingOrEmptyDistribution() {
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> validateConfig("normal", null));
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> validateConfig("normal", Map.of()));
+        assertThrows(IllegalArgumentException.class, () -> validateConfig("normal", null));
+        assertThrows(IllegalArgumentException.class, () -> validateConfig("normal", Map.of()));
     }
 
     @Test
