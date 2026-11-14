@@ -23,6 +23,29 @@ class TrafficControllerTest {
     private TrafficService trafficService;
 
     @Test
+    @DisplayName("Should return distributed response")
+    void getDistributedResponse() {
+        given(trafficService.getDistributedResponse())
+                .willReturn(Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
+
+        webClient
+                .get()
+                .uri("/traffic/distributed")
+                .exchange()
+                .expectStatus()
+                .is5xxServerError()
+                .expectBody()
+                .jsonPath("$.status")
+                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .jsonPath("$.code")
+                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.name())
+                .jsonPath("$.message")
+                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+
+        then(trafficService).should().getDistributedResponse();
+    }
+
+    @Test
     @DisplayName("Should return random response")
     void getRandomResponse() {
         given(trafficService.getRandomResponse())

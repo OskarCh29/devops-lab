@@ -36,15 +36,7 @@ public class TrafficService {
                 .defaultIfEmpty(new TrafficStatusResponse(TrafficState.STOPPED));
     }
 
-    private TrafficStatusResponse deserializeTrafficState(String value) {
-        return objectMapper.readValue(value, TrafficStatusResponse.class);
-    }
-
-    private String serializeTrafficState(TrafficStatusResponse response) {
-        return objectMapper.writeValueAsString(response);
-    }
-
-    private Mono<Integer> getDistributedResponse() {
+    public Mono<Void> getDistributedResponse() {
         return Mono.fromSupplier(() -> {
             Map<Integer, Integer> distribution = responseConfig
                     .profiles()
@@ -57,10 +49,14 @@ public class TrafficService {
             for (Map.Entry<Integer, Integer> entry : distribution.entrySet()) {
                 sum += entry.getValue();
                 if (draw < sum) {
-                    return entry.getKey();
+                    throw new ResponseStatusException(HttpStatus.valueOf(entry.getKey()));
                 }
             }
             throw new IllegalStateException("Configured distribution must sum to 100");
         });
+    }
+
+    private TrafficStatusResponse deserializeTrafficState(String value) {
+        return objectMapper.readValue(value, TrafficStatusResponse.class);
     }
 }

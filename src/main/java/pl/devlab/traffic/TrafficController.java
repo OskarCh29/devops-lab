@@ -1,9 +1,10 @@
 package pl.devlab.traffic;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +18,8 @@ public class TrafficController {
     private final TrafficService trafficService;
 
     @GetMapping("/distributed")
-    public Mono<?> getResponseBasedOnDistribution() {
-        return Mono.empty();
+    public Mono<Void> getResponseBasedOnDistribution() {
+        return trafficService.getDistributedResponse();
     }
 
     @GetMapping("/random")
@@ -31,8 +32,8 @@ public class TrafficController {
         return trafficService.getTrafficStatus();
     }
 
-    @PutMapping("/state")
-    public Mono<TrafficStatusResponse> adjustState(@RequestBody UpdateTrafficStateRequest request) {
+    @PatchMapping("/state")
+    public Mono<TrafficStatusResponse> adjustState(@RequestBody @Valid UpdateTrafficStateRequest request) {
         return Mono.empty();
     }
 

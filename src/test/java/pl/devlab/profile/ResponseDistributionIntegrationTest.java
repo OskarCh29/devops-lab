@@ -57,7 +57,7 @@ class ResponseDistributionIntegrationTest {
     void getDistributionByProfileNameReturnsError() {
         webTestClient
                 .get()
-                .uri("/profiles/{profile}/distribution", "test")
+                .uri("/profiles/{profile}/distribution", "nonExisting")
                 .exchange()
                 .expectStatus()
                 .isBadRequest()
@@ -67,8 +67,8 @@ class ResponseDistributionIntegrationTest {
                 .jsonPath("$.code")
                 .isEqualTo("BAD_REQUEST")
                 .jsonPath("$.message")
-                .isEqualTo("Profile is not configured: test")
+                .isEqualTo("Profile is not configured: nonExisting")
                 .jsonPath("$.path")
-                .isEqualTo("/profiles/test/distribution");
+                .isEqualTo("/profiles/nonExisting/distribution");
     }
 }
