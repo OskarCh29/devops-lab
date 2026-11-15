@@ -1,4 +1,4 @@
-package pl.devlab.traffic;
+package pl.devlab.generator;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -11,26 +11,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.server.ResponseStatusException;
+import pl.devlab.traffic.generator.ResponseGeneratorController;
+import pl.devlab.traffic.generator.ResponseGeneratorService;
 import reactor.core.publisher.Mono;
 
-@WebFluxTest(TrafficController.class)
-class TrafficControllerTest {
+@WebFluxTest(ResponseGeneratorController.class)
+class ResponseGeneratorControllerTest {
 
     @Autowired
     private WebTestClient webClient;
 
     @MockitoBean
-    private TrafficService trafficService;
+    private ResponseGeneratorService responseGeneratorService;
 
     @Test
     @DisplayName("Should return distributed response")
     void getDistributedResponse() {
-        given(trafficService.getDistributedResponse())
+        given(responseGeneratorService.getDistributedResponse())
                 .willReturn(Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)));
 
         webClient
                 .get()
-                .uri("/traffic/distributed")
+                .uri("/generator/responses/distributed")
                 .exchange()
                 .expectStatus()
                 .is5xxServerError()
@@ -42,18 +44,18 @@ class TrafficControllerTest {
                 .jsonPath("$.message")
                 .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
 
-        then(trafficService).should().getDistributedResponse();
+        then(responseGeneratorService).should().getDistributedResponse();
     }
 
     @Test
     @DisplayName("Should return random response")
     void getRandomResponse() {
-        given(trafficService.getRandomResponse())
+        given(responseGeneratorService.getRandomResponse())
                 .willReturn(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
 
         webClient
                 .get()
-                .uri("/traffic/random")
+                .uri("/generator/responses/random")
                 .exchange()
                 .expectStatus()
                 .isNotFound()
@@ -65,6 +67,6 @@ class TrafficControllerTest {
                 .jsonPath("$.message")
                 .isEqualTo(HttpStatus.NOT_FOUND.getReasonPhrase());
 
-        then(trafficService).should().getRandomResponse();
+        then(responseGeneratorService).should().getRandomResponse();
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.devlab.traffic.common.TrafficStatusResponse;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -16,16 +17,6 @@ import reactor.core.publisher.Mono;
 public class TrafficController {
 
     private final TrafficService trafficService;
-
-    @GetMapping("/distributed")
-    public Mono<Void> getResponseBasedOnDistribution() {
-        return trafficService.getDistributedResponse();
-    }
-
-    @GetMapping("/random")
-    public Mono<Void> getRandomResponse() {
-        return trafficService.getRandomResponse();
-    }
 
     @GetMapping("/state")
     public Mono<TrafficStatusResponse> getTrafficStatus() {

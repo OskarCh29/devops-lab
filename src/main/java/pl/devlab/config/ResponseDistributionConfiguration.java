@@ -3,6 +3,7 @@ package pl.devlab.config;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.http.HttpStatus;
 
 @ConfigurationProperties(prefix = "dev.responses")
 public record ResponseDistributionConfiguration(String activeProfile, Map<String, Profile> profiles) {
@@ -11,8 +12,7 @@ public record ResponseDistributionConfiguration(String activeProfile, Map<String
 
     private static final int ONE_HUNDRED = 100;
     private static final int ZERO = 0;
-    private static final int HIGHEST_POSSIBLE_HTTP_STATUS_VALUE = 599;
-    private static final int LOWEST_POSSIBLE_HTTP_STATUS_VALUE = 100;
+    private static final int LOWEST_POSSIBLE_HTTP_STATUS_VALUE = 200;
 
     public ResponseDistributionConfiguration {
         if (profiles == null || profiles.isEmpty()) {
@@ -45,7 +45,7 @@ public record ResponseDistributionConfiguration(String activeProfile, Map<String
 
             return status == null
                     || status < LOWEST_POSSIBLE_HTTP_STATUS_VALUE
-                    || status > HIGHEST_POSSIBLE_HTTP_STATUS_VALUE
+                    || HttpStatus.resolve(status) == null
                     || percentage == null
                     || percentage < ZERO
                     || percentage > ONE_HUNDRED;

@@ -1,4 +1,4 @@
-package pl.devlab.traffic;
+package pl.devlab.traffic.common;
 
 public record TrafficStatusResponse(TrafficState state, int requestsPerSecond) {
 
