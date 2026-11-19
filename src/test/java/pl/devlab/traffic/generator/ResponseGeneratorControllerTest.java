@@ -1,5 +1,7 @@
 package pl.devlab.traffic.generator;
 
+import static org.mockito.BDDMockito.given;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-
-import static org.mockito.BDDMockito.given;
 
 @WebFluxTest(ResponseGeneratorController.class)
 class ResponseGeneratorControllerTest {
@@ -26,9 +26,7 @@ class ResponseGeneratorControllerTest {
     void mapsGeneratedResponse() {
         given(responseGeneratorService.getDistributedResponse())
                 .willReturn(Mono.just(GeneratedResponse.withJsonBody(
-                        HttpStatus.TOO_MANY_REQUESTS,
-                        headerWith(HttpHeaders.RETRY_AFTER, "5")
-                )));
+                        HttpStatus.TOO_MANY_REQUESTS, headerWith(HttpHeaders.RETRY_AFTER, "5"))));
 
         webTestClient
                 .get()
@@ -41,7 +39,6 @@ class ResponseGeneratorControllerTest {
                 .expectBody()
                 .jsonPath("$.code")
                 .isEqualTo("TOO_MANY_REQUESTS");
-
     }
 
     @Test
@@ -58,7 +55,6 @@ class ResponseGeneratorControllerTest {
                 .isNoContent()
                 .expectBody()
                 .isEmpty();
-
     }
 
     @Test
@@ -73,9 +69,7 @@ class ResponseGeneratorControllerTest {
                 .expectBody()
                 .jsonPath("$.message")
                 .isEqualTo("Redirect target reached");
-
     }
-
 
     private static HttpHeaders headerWith(String name, String value) {
         HttpHeaders headers = new HttpHeaders();
