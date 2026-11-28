@@ -1,12 +1,14 @@
 package pl.devlab.traffic;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.devlab.traffic.common.TrafficStatusResponse;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -16,23 +18,13 @@ public class TrafficController {
 
     private final TrafficService trafficService;
 
-    @GetMapping("/distributed")
-    public Mono<?> getResponseBasedOnDistribution() {
-        return Mono.empty();
-    }
-
-    @GetMapping("/random")
-    public Mono<Void> getRandomResponse() {
-        return trafficService.getRandomResponse();
-    }
-
     @GetMapping("/state")
     public Mono<TrafficStatusResponse> getTrafficStatus() {
         return trafficService.getTrafficStatus();
     }
 
-    @PutMapping("/state")
-    public Mono<TrafficStatusResponse> adjustState(@RequestBody UpdateTrafficStateRequest request) {
+    @PatchMapping("/state")
+    public Mono<TrafficStatusResponse> adjustState(@RequestBody @Valid UpdateTrafficStateRequest request) {
         return Mono.empty();
     }
 

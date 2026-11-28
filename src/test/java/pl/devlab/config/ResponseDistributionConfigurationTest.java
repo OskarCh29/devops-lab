@@ -13,7 +13,7 @@ class ResponseDistributionConfigurationTest {
     @Test
     @DisplayName("Accepts valid HTTP status and percentage boundaries and makes maps immutable")
     void acceptsValidConfigurationAndMakesMapsImmutable() {
-        var distribution = Map.of(100, 0, 599, 100);
+        var distribution = Map.of(200, 0, 503, 100);
         var configuration = new ResponseDistributionConfiguration("normal", profiles(distribution));
 
         assertEquals(distribution, configuration.profiles().get("normal").distribution());
@@ -70,7 +70,9 @@ class ResponseDistributionConfigurationTest {
     @DisplayName("Rejects invalid status codes and percentages")
     void rejectsInvalidDistributionEntries() {
         assertInvalidDistribution(entry(null, 100));
+        assertInvalidDistribution(Map.of(100, 100));
         assertInvalidDistribution(Map.of(99, 100));
+        assertInvalidDistribution(Map.of(599, 100));
         assertInvalidDistribution(Map.of(600, 100));
         assertInvalidDistribution(entry(200, null));
         assertInvalidDistribution(Map.of(200, -1));
